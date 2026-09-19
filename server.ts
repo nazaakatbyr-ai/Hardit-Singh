@@ -13,7 +13,8 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  // Support dynamic PORT assigned by Hostinger / Cloud environments
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
   // Security & Middleware
   app.use(cors());
@@ -276,15 +277,18 @@ async function startServer() {
     });
   });
 
-  // Vite middleware for development vs static build in production
-  if (process.env.NODE_ENV !== 'production') {
+  // Vite middleware for development vs static build in production (Hostinger compatibility)
+  const distPath = path.join(process.cwd(), 'dist');
+  const distIndexExists = fs.existsSync(path.join(distPath, 'index.html'));
+  const isProduction = process.env.NODE_ENV === 'production' || distIndexExists;
+
+  if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

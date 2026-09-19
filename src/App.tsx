@@ -19,10 +19,12 @@ import { KnowledgeSyncPanel } from './components/KnowledgeSyncPanel.tsx';
 import { LeadsManager } from './components/LeadsManager.tsx';
 import { ProductCatalogue } from './components/ProductCatalogue.tsx';
 import { EmbedCodeModal } from './components/EmbedCodeModal.tsx';
+import { HostingerDeployPanel } from './components/HostingerDeployPanel.tsx';
+import { Server } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<
-    'chat' | 'tests' | 'outfit' | 'products' | 'knowledge' | 'leads' | 'embed'
+    'chat' | 'tests' | 'outfit' | 'products' | 'knowledge' | 'leads' | 'embed' | 'hostinger'
   >('chat');
   const [prefilledPrompt, setPrefilledPrompt] = useState<string>('');
   const [isFloatingOpen, setIsFloatingOpen] = useState(false);
@@ -188,6 +190,18 @@ export default function App() {
               <Code2 className="w-3.5 h-3.5 text-[#C5A059]" />
               Embed Widget
             </button>
+
+            <button
+              onClick={() => setActiveTab('hostinger')}
+              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                activeTab === 'hostinger'
+                  ? 'bg-[#113824] text-[#F9F5EC] font-semibold shadow-xs'
+                  : 'text-[#113824] bg-[#C5A059]/15 hover:bg-[#C5A059]/25 font-semibold'
+              }`}
+            >
+              <Server className="w-3.5 h-3.5 text-[#113824]" />
+              Hostinger Setup
+            </button>
           </nav>
         </div>
       </header>
@@ -286,6 +300,25 @@ export default function App() {
                   View Code
                 </button>
               </div>
+
+              {/* Hostinger Quick Link */}
+              <div className="bg-gradient-to-br from-[#FAF8F5] to-[#F2EDE1] border border-[#C5A059]/40 rounded-2xl p-4 flex items-center justify-between gap-3 text-xs">
+                <div>
+                  <div className="font-semibold text-[#113824] flex items-center gap-1.5">
+                    <Server className="w-3.5 h-3.5 text-[#113824]" />
+                    Host on Hostinger
+                  </div>
+                  <div className="text-[11px] text-[#6E6352] mt-0.5">
+                    hPanel Node.js, .htaccess, and PM2 configs ready.
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveTab('hostinger')}
+                  className="px-3 py-1.5 bg-[#113824] text-[#F9F5EC] rounded-lg text-xs font-medium hover:bg-[#184E33] transition-colors shrink-0"
+                >
+                  Configure
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -308,6 +341,7 @@ export default function App() {
         {activeTab === 'knowledge' && <KnowledgeSyncPanel />}
         {activeTab === 'leads' && <LeadsManager />}
         {activeTab === 'embed' && <EmbedCodeModal />}
+        {activeTab === 'hostinger' && <HostingerDeployPanel />}
       </main>
 
       {/* Floating Widget Simulator Button */}

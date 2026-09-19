@@ -1,0 +1,45 @@
+# ==============================================================================
+# Hostinger LiteSpeed / Apache Configuration for Nazaakat Concierge
+# Supports both:
+# 1. Static SPA Hosting with Client-Side Routing
+# 2. CORS Headers for Widget Embedding on nazaakatbyr.com
+# 3. Cache & Gzip Performance Tuning
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Serve existing files and directories directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Route all other URLs to index.html for Single Page App navigation
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|json|svg|png|jpg|jpeg|webp|woff2?)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+  </FilesMatch>
+
+  <Files "widget.js">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Content-Type "application/javascript; charset=utf-8"
+  </Files>
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+  AddType image/svg+xml .svg
+  AddType font/woff2 .woff2
+</IfModule>

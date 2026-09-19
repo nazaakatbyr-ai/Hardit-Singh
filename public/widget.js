@@ -11,12 +11,15 @@
     document.querySelector('script[data-bot-id="nazaakatbyr"]') ||
     document.querySelector('script[src*="widget.js"]');
 
-  let baseUrl = '';
-  if (currentScript && currentScript.src) {
-    const url = new URL(currentScript.src);
-    baseUrl = `${url.protocol}//${url.host}`;
-  } else {
-    baseUrl = window.location.origin;
+  const configuredApiUrl = currentScript && currentScript.getAttribute('data-api-url');
+  let baseUrl = configuredApiUrl || '';
+  if (!baseUrl) {
+    if (currentScript && currentScript.src) {
+      const url = new URL(currentScript.src);
+      baseUrl = `${url.protocol}//${url.host}`;
+    } else {
+      baseUrl = window.location.origin;
+    }
   }
 
   const botId = (currentScript && currentScript.getAttribute('data-bot-id')) || 'nazaakatbyr';
